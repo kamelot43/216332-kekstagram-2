@@ -10,6 +10,7 @@ var bigPicture = document.querySelector('.big-picture');
 bigPicture.classList.remove('hidden');
 
 var socialComments = document.querySelector('.social__comments');
+var socialComment = document.querySelector('.social__comment');
 var socialCommentCount = document.querySelector('.social__comment-count');
 var commentsLoader = document.querySelector('.comments-loader');
 
@@ -73,6 +74,7 @@ function createUserPhoto(photo) {
 }
 
 // Функция вставки на страницу DOM-элемента
+
 function renderPhotos(arr) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arr.length; i++) {
@@ -81,37 +83,44 @@ function renderPhotos(arr) {
   photosListElement.appendChild(fragment);
 }
 
-//Функция создания DOM-элемента комментарий к bigPhoto с помощью разметки
+// Функция создания DOM-элемента комментарий к bigPhoto
 function createCommentElement(comment) {
 
-  return `<li class="social__comment">
-  <img class="social__picture" src="img/avatar-${randomInteger(1, 6)}.svg"
-    alt="Аватар комментатора фотографии"
-    width="35" height="35">
-    <p class="social__text">${comment}</p>
-</li>`;
+  var currentComment = socialComment.cloneNode(true);
+
+  currentComment.querySelector('.social__picture').setAttribute('src', 'img/avatar-' + randomInteger(1, 6) + '.svg');
+  currentComment.querySelector('.social__text').textContent = comment;
+
+  return currentComment;
 }
 
 renderPhotos(photos);
 
-//Функция для работы с bigPicture
+// Функция для работы с bigPicture
+// Вставка аватара, коммента, кол-ва лайков, описание фотографии
+
 function changeBigPicture() {
+  // Базовый элемент - первый элемент из згенериров. массива
   var basePicture = photos[0];
   var basePictureComments = basePicture.comments;
 
   bigPicture.querySelector('.big-picture__img').children[0].setAttribute('src', basePicture.user);
   bigPicture.querySelector('.likes-count').textContent = basePicture.likes;
-  bigPicture.querySelector('.comments-count').textContent = basePicture.comments.length;
+  bigPicture.querySelector('.comments-count').textContent = basePictureComments.length;
   bigPicture.querySelector('.social__caption').textContent = basePicture.description;
 
-  socialComments.innerHTML = '';
+
   socialCommentCount.classList.add('visually-hidden');
   commentsLoader.classList.add('visually-hidden');
+  var fragment = document.createDocumentFragment();
 
   for (var i = 0; i < basePictureComments.length; i++) {
     var commentElement = createCommentElement(basePictureComments[i]);
-    socialComments.insertAdjacentHTML('afterbegin', commentElement);
+    fragment.appendChild(commentElement);
   }
+
+  socialComments.innerHTML = '';
+  socialComments.appendChild(fragment);
 }
 
 changeBigPicture();
