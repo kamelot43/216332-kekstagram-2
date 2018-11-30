@@ -3,16 +3,84 @@ var USER_DESCR = ['Тестим новую камеру!', 'Затусили с 
 var MAX_PHOTOS = 25;
 var MIN_LIKES = 15;
 var MAX_LIKES = 200;
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
 
 var similarPhotosTemplate = document.querySelector('#picture').content;
 var photosListElement = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
+var closeBigPicture = bigPicture.querySelector('.big-picture__cancel');
+
 bigPicture.classList.remove('hidden');
 
 var socialComments = document.querySelector('.social__comments');
 var socialComment = document.querySelector('.social__comment');
 var socialCommentCount = document.querySelector('.social__comment-count');
 var commentsLoader = document.querySelector('.comments-loader');
+
+// Поле загрузки фотографии
+var uploadFileInput = document.querySelector('.img-upload__input');
+// Форма редактирования изображения
+var uploadImgOverlay = document.querySelector('.img-upload__overlay');
+// Предварительный просмотр изображения
+var uploadImgPreview = document.querySelector('.img-upload__preview');
+var closePreview = document.querySelector('.img-upload__cancel');
+
+uploadFileInput.addEventListener('change', function () {
+  openPreview();
+});
+
+
+closePreview.addEventListener('click', function () {
+  closePreview();
+});
+
+closePreview.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePreview();
+  }
+});
+
+// Реализация открытия/закрытия оверлея
+
+var onPopupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && setupUserName !== document.activeElement) {
+    closePopup();
+  }
+};
+
+var onPreviewEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    closePreview();
+  }
+};
+
+
+var openPreview = function () {
+  uploadImgOverlay.classList.remove('hidden');
+  document.addEventListener('keydown', onPreviewEscPress);
+};
+
+var closePopup = function () {
+  bigPicture.classList.add('hidden');
+  document.removeEventListener('keydown', onPopupEscPress);
+};
+
+var closePreview = function () {
+  uploadImgOverlay.classList.add('hidden');
+  uploadFileInput.value = '';
+  document.removeEventListener('keydown', onPreviewEscPress);
+};
+
+closeBigPicture.addEventListener('click', function () {
+  closePopup();
+});
+
+closeBigPicture.addEventListener('keydown', function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closePopup();
+  }
+});
 
 // Пустой массив для хранения фотографий пользователей
 var photos = [];
@@ -96,26 +164,29 @@ function createCommentElement(comment) {
 
 renderPhotos(photos);
 
-// Функция для работы с bigPicture
-// Вставка аватара, коммента, кол-ва лайков, описание фотографии
-
-function changeBigPicture() {
-  // Базовый элемент - первый элемент из згенериров. массива
-  var basePicture = photos[0];
-  var basePictureComments = basePicture.comments;
+function changeBigPicture(basePicture) {
 
   bigPicture.querySelector('.big-picture__img').children[0].setAttribute('src', basePicture.user);
   bigPicture.querySelector('.likes-count').textContent = basePicture.likes;
-  bigPicture.querySelector('.comments-count').textContent = basePictureComments.length;
+  bigPicture.querySelector('.comments-count').textContent = basePicture.comments.length;
   bigPicture.querySelector('.social__caption').textContent = basePicture.description;
+}
 
+// Функция для работы с bigPicture
+// Вставка аватара, коммента, кол-ва лайков, описание фотографии
+// Базовый элемент - первый элемент из згенериров. массива
+
+var basePicture = photos[0];
+
+function pasteDataBigPicture(baseElement) {
+  changeBigPicture(baseElement);
 
   socialCommentCount.classList.add('visually-hidden');
   commentsLoader.classList.add('visually-hidden');
   var fragment = document.createDocumentFragment();
 
-  for (var i = 0; i < basePictureComments.length; i++) {
-    var commentElement = createCommentElement(basePictureComments[i]);
+  for (var i = 0; i < baseElement.comments.length; i++) {
+    var commentElement = createCommentElement(baseElement.comments[i]);
     fragment.appendChild(commentElement);
   }
 
@@ -123,4 +194,4 @@ function changeBigPicture() {
   socialComments.appendChild(fragment);
 }
 
-changeBigPicture();
+// pasteDataBigPicture(basePicture);
