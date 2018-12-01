@@ -5,6 +5,7 @@ var MIN_LIKES = 15;
 var MAX_LIKES = 200;
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+var DEFAULT_PHOTO_FILTER = 'img-upload__preview';
 
 var similarPhotosTemplate = document.querySelector('#picture').content;
 var photosListElement = document.querySelector('.pictures');
@@ -25,6 +26,9 @@ var uploadImgOverlay = document.querySelector('.img-upload__overlay');
 // Предварительный просмотр изображения
 var uploadImgPreview = document.querySelector('.img-upload__preview');
 var closePreview = document.querySelector('.img-upload__cancel');
+// Список фото-фильтров
+var uploadEffectsList = document.querySelector('.img-upload__effects');
+
 
 uploadFileInput.addEventListener('change', function () {
   openPreview();
@@ -72,6 +76,17 @@ var closePreview = function () {
   document.removeEventListener('keydown', onPreviewEscPress);
 };
 
+// Функция наложения фото-эффекта на фотографию
+var changePhotoFilter = function (currentFilter) {
+
+  if (currentFilter !== 'none') {
+    uploadImgPreview.setAttribute('class', DEFAULT_PHOTO_FILTER);
+    uploadImgPreview.classList.add('effects__preview--' + currentFilter);
+  } else {
+    uploadImgPreview.setAttribute('class', DEFAULT_PHOTO_FILTER);
+  }
+};
+
 closeBigPicture.addEventListener('click', function () {
   closePopup();
 });
@@ -80,6 +95,13 @@ closeBigPicture.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closePopup();
   }
+});
+
+// Реализация работы с фильтрами
+
+uploadEffectsList.addEventListener('change', function (evt) {
+  var targetValue = evt.target.value;
+  changePhotoFilter(targetValue);
 });
 
 // Пустой массив для хранения фотографий пользователей
