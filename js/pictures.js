@@ -1,3 +1,5 @@
+'use strict';
+
 var USER_COMMENTS = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var USER_DESCR = ['Тестим новую камеру!', 'Затусили с друзьями на море', 'Как же круто тут кормят', 'Отдыхаем...', 'Цените каждое мгновенье. Цените тех, кто рядом с вами и отгоняйте все сомненья. Не обижайте всех словами......', 'Вот это тачка!'];
 var MAX_PHOTOS = 25;
@@ -25,7 +27,7 @@ var uploadFileInput = uploadImages.querySelector('.img-upload__input');
 var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
 // Предварительный просмотр изображения
 var uploadImgPreview = uploadImages.querySelector('.img-upload__preview');
-var closePreview = uploadImages.querySelector('.img-upload__cancel');
+var closePreviewElement = uploadImages.querySelector('.img-upload__cancel');
 // Список фото-фильтров
 var uploadEffectsList = uploadImages.querySelector('.img-upload__effects');
 
@@ -35,11 +37,11 @@ uploadFileInput.addEventListener('change', function () {
 });
 
 
-closePreview.addEventListener('click', function () {
+closePreviewElement.addEventListener('click', function () {
   closePreview();
 });
 
-closePreview.addEventListener('keydown', function (evt) {
+closePreviewElement.addEventListener('keydown', function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
     closePreview();
   }
