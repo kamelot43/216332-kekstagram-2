@@ -12,22 +12,22 @@ var photosListElement = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
 var closeBigPicture = bigPicture.querySelector('.big-picture__cancel');
 
-bigPicture.classList.remove('hidden');
 
 var socialComments = document.querySelector('.social__comments');
 var socialComment = document.querySelector('.social__comment');
 var socialCommentCount = document.querySelector('.social__comment-count');
 var commentsLoader = document.querySelector('.comments-loader');
-
+// Контейнер для загрузки фотографии других пользователей
+var uploadImages = document.querySelector('.pictures');
 // Поле загрузки фотографии
-var uploadFileInput = document.querySelector('.img-upload__input');
+var uploadFileInput = uploadImages.querySelector('.img-upload__input');
 // Форма редактирования изображения
-var uploadImgOverlay = document.querySelector('.img-upload__overlay');
+var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
 // Предварительный просмотр изображения
-var uploadImgPreview = document.querySelector('.img-upload__preview');
-var closePreview = document.querySelector('.img-upload__cancel');
+var uploadImgPreview = uploadImages.querySelector('.img-upload__preview');
+var closePreview = uploadImages.querySelector('.img-upload__cancel');
 // Список фото-фильтров
-var uploadEffectsList = document.querySelector('.img-upload__effects');
+var uploadEffectsList = uploadImages.querySelector('.img-upload__effects');
 
 
 uploadFileInput.addEventListener('change', function () {
@@ -48,7 +48,7 @@ closePreview.addEventListener('keydown', function (evt) {
 // Реализация открытия/закрытия оверлея
 
 var onPopupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE && setupUserName !== document.activeElement) {
+  if (evt.keyCode === ESC_KEYCODE) {
     closePopup();
   }
 };
@@ -65,8 +65,15 @@ var openPreview = function () {
   document.addEventListener('keydown', onPreviewEscPress);
 };
 
+var openPopup = function () {
+  bigPicture.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  document.addEventListener('keydown', onPopupEscPress);
+};
+
 var closePopup = function () {
   bigPicture.classList.add('hidden');
+  document.body.classList.remove('modal-open');
   document.removeEventListener('keydown', onPopupEscPress);
 };
 
@@ -87,6 +94,15 @@ var changePhotoFilter = function (currentFilter) {
   }
 };
 
+// Функция поиска порядкового номера картинки
+// Дважды отсекает из строки ненужные символы (из начала и конца строки)
+var transformImgameSrc = function (target) {
+  var imageSrcAtr = target.getAttribute('src');
+  imageSrcAtr = imageSrcAtr.slice(7);
+  imageSrcAtr = imageSrcAtr.slice(0, -4);
+  return imageSrcAtr;
+};
+
 closeBigPicture.addEventListener('click', function () {
   closePopup();
 });
@@ -102,6 +118,36 @@ closeBigPicture.addEventListener('keydown', function (evt) {
 uploadEffectsList.addEventListener('change', function (evt) {
   var targetValue = evt.target.value;
   changePhotoFilter(targetValue);
+});
+
+// Реализация работы с оверлеем (изменение bigPicture)
+
+function renderUpdatedBigPicture(currentTarget) {
+  // Поиск текущего элемента в массиве фотографи photos
+  // Найти по src порядковый номер текущей картинки и уменшить его на 1
+  var indexOfPhoto = transformImgameSrc(currentTarget) - 1;
+  var currentPhoto = photos[indexOfPhoto];
+  openPopup();
+  pasteDataBigPicture(currentPhoto);
+}
+
+// Показ оверлея с текущей выбранной картинки при клике
+uploadImages.addEventListener('click', function (evt) {
+  var target = evt.target;
+
+  if (target.parentNode.classList.contains('picture')) {
+    renderUpdatedBigPicture(target);
+  }
+});
+
+// Показ оверлея с текущей выбранной картинки при нажатии клавиши
+uploadImages.addEventListener('keydown', function (evt) {
+  var target = evt.target;
+
+
+  if (evt.keyCode === ENTER_KEYCODE && target.classList.contains('picture')) {
+    renderUpdatedBigPicture(target.firstElementChild);
+  }
 });
 
 // Пустой массив для хранения фотографий пользователей
@@ -159,6 +205,7 @@ function createUserPhoto(photo) {
   photoElement.querySelector('.picture__img').setAttribute('src', photo.user);
   photoElement.querySelector('.picture__likes').textContent = photo.likes;
   photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
+  photoElement.querySelector('.picture').setAttribute('tabindex', '0');
 
   return photoElement;
 }
@@ -198,8 +245,6 @@ function changeBigPicture(basePicture) {
 // Вставка аватара, коммента, кол-ва лайков, описание фотографии
 // Базовый элемент - первый элемент из згенериров. массива
 
-var basePicture = photos[0];
-
 function pasteDataBigPicture(baseElement) {
   changeBigPicture(baseElement);
 
@@ -216,4 +261,4 @@ function pasteDataBigPicture(baseElement) {
   socialComments.appendChild(fragment);
 }
 
-// pasteDataBigPicture(basePicture);
+openPopup();
