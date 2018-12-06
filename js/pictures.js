@@ -10,6 +10,7 @@ var ENTER_KEYCODE = 13;
 var DEFAULT_PHOTO_FILTER = 'img-upload__preview';
 var MAX_HASH_TAGS = 5;
 var MAX_HASH_TAG_LENGTH = 20;
+var MAX_COMMENT_LENGTH = 140;
 
 var similarPhotosTemplate = document.querySelector('#picture').content;
 var photosListElement = document.querySelector('.pictures');
@@ -38,8 +39,6 @@ var uploadEffectsList = uploadImages.querySelector('.img-upload__effects');
 var hashtagsInput = document.querySelector('.text__hashtags');
 // Поле ввода комментария
 var commentInput = document.querySelector('.text__description');
-// Кнопка отправки формы
-var submitFormBtn = document.querySelector('.img-upload__submit');
 
 
 uploadFileInput.addEventListener('change', function () {
@@ -282,12 +281,16 @@ hashtagsInput.addEventListener('input', function () {
   validateHashTags(hashtagsInput);
 });
 
+commentInput.addEventListener('input', function () {
+  validateComment(commentInput);
+});
+
 // Функция поиска одинаковых хеш-тегов
 function findSameHashTags(array, item) {
   var indices = [];
   // Текущий индекс элемента в массиве
   var idx = array.indexOf(item);
-  while (idx != -1) {
+  while (idx !== -1) {
     indices.push(idx);
     idx = array.indexOf(item, idx + 1);
   }
@@ -298,6 +301,7 @@ function findSameHashTags(array, item) {
   return false;
 }
 
+// Функция валидации поля формы хеш-тег
 function validateHashTags(input) {
   var hashtagsArrays = input.value.toLowerCase().split(' ');
   var currentElement;
@@ -305,7 +309,7 @@ function validateHashTags(input) {
     currentElement = hashtagsArrays[i];
     if (hashtagsArrays.indexOf('') !== -1) {
       input.setCustomValidity('хэш-теги разделяются пробелами');
-    } else if (currentElement.charAt(0) != '#') {
+    } else if (currentElement.charAt(0) !== '#') {
       input.setCustomValidity('хештег должен начинаться с символа #');
     } else if (currentElement.length <= 1) {
       input.setCustomValidity('хештег не должен состоять только из символа #');
@@ -317,7 +321,15 @@ function validateHashTags(input) {
       input.setCustomValidity('максимальная длина одного хэш-тега 20 символов, включая решётку');
     } else {
       input.setCustomValidity('');
-      input.classList.remove('upload-message-error');
     }
+  }
+}
+
+// Функция валидации поля формы коммантарий
+function validateComment(input) {
+  if (input.value.length > MAX_COMMENT_LENGTH) {
+    input.setCustomValidity('длина комментария не может составлять больше 140 символов');
+  } else {
+    input.setCustomValidity('');
   }
 }
