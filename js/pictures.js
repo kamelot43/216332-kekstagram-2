@@ -371,25 +371,27 @@ function validateComment(input) {
 
 function filtration(filterValue) {
   // пропорция для расчета уровня фильтра
-  var proportion = Math.ceil((3 * filterValue) / 100);
+  var proportion = (3 * filterValue) / 100;
 
   if (uploadImgPreview.classList.contains('effects__preview--chrome')) {
-
     uploadImgPreview.style.filter = 'grayscale(' + filterValue + '% )';
   } else if (uploadImgPreview.classList.contains('effects__preview--sepia')) {
-
     uploadImgPreview.style.filter = 'sepia(' + filterValue + '% )';
-  } /* else if (uploadImgPreview.classList.contains('effects__preview--marvin')) {
-
+  } else if (uploadImgPreview.classList.contains('effects__preview--marvin')) {
     uploadImgPreview.style.filter = 'invert(' + filterValue + '%)';
-  }*/
+  } else if (uploadImgPreview.classList.contains('effects__preview--phobos')) {
+    uploadImgPreview.style.filter = 'blur(' + proportion + 'px)';
+  } else if (uploadImgPreview.classList.contains('effects__preview--heat')) {
+    uploadImgPreview.style.filter = 'brightness(' + proportion + ')';
+  } else {
+    return;
+  }
 }
 
 
 pin.addEventListener('mousedown', function (evt) {
   evt.preventDefault();
 
-  var coords = pin.getBoundingClientRect();
 
   var startCoords = {
     x: evt.clientX,
