@@ -33,12 +33,27 @@ var uploadImgPreview = uploadImages.querySelector('.img-upload__preview');
 var closePreviewElement = uploadImages.querySelector('.img-upload__cancel');
 // Список фото-фильтров
 var uploadEffectsList = uploadImages.querySelector('.img-upload__effects');
+// Слайдер, содержащий фото-фильтры
+var photoFiltersSlider = uploadImages.querySelector('.img-upload__effect-level');
 
 // Валидация формы
 // Поле ввода хеш-тега
 var hashtagsInput = document.querySelector('.text__hashtags');
 // Поле ввода комментария
 var commentInput = document.querySelector('.text__description');
+
+// Ползунок(пин)
+var pin = document.querySelector('.effect-level__pin');
+// Поле содержащее значение наложенного эффекта
+var effectLevelPin = document.querySelector('.effect-level__value');
+// Индикатор насышенности эффекта
+var effectLevelDepth = document.querySelector('.effect-level__depth');
+// Мин. координата пина относительно левого края
+var MIN_CLIENT_X = 0;
+// Макс. координата пина относительно правого края
+var MAX_CLIENT_X = 445;
+// Макс. значение глубины цвета
+var MAX_DEPTH_VAL = 100;
 
 
 uploadFileInput.addEventListener('change', function () {
@@ -72,7 +87,12 @@ var onPreviewEscPress = function (evt) {
 
 
 var openPreview = function () {
+  // Открыть оверлей
+  // Утсановить значение фильтра по умолчанию (нет эффектов)
+  // Скрыть слайдер
   uploadImgOverlay.classList.remove('hidden');
+  document.getElementById('effect-none').checked = true;
+  photoFiltersSlider.classList.add('hidden');
   document.addEventListener('keydown', onPreviewEscPress);
 };
 
@@ -94,14 +114,26 @@ var closePreview = function () {
   document.removeEventListener('keydown', onPreviewEscPress);
 };
 
+// Функция сброса значение при переключении фильтрами
+// Сбрасывает ранее примененные фильтры
+// Устанавливает значение пина и шкалы насышенности в значение по-умолчанию
+function restartFilter() {
+  uploadImgPreview.style.filter = '';
+  pin.style.left = MAX_CLIENT_X + 'px';
+  effectLevelDepth.style.width = MAX_DEPTH_VAL + '%';
+}
+
 // Функция наложения фото-эффекта на фотографию
 var changePhotoFilter = function (currentFilter) {
+  restartFilter();
 
   if (currentFilter !== 'none') {
+    photoFiltersSlider.classList.remove('hidden');
     uploadImgPreview.setAttribute('class', DEFAULT_PHOTO_FILTER);
     uploadImgPreview.classList.add('effects__preview--' + currentFilter);
   } else {
     uploadImgPreview.setAttribute('class', DEFAULT_PHOTO_FILTER);
+    photoFiltersSlider.classList.add('hidden');
   }
 };
 
@@ -333,3 +365,73 @@ function validateComment(input) {
     input.setCustomValidity('');
   }
 }
+
+// Работа с перемещением пина и изменение наложенных на фотографию эффектов
+
+
+function filtration(filterValue) {
+  // пропорция для расчета уровня фильтра
+  var proportion = (3 * filterValue) / 100;
+
+  if (uploadImgPreview.classList.contains('effects__preview--chrome')) {
+    uploadImgPreview.style.filter = 'grayscale(' + filterValue + '% )';
+  } else if (uploadImgPreview.classList.contains('effects__preview--sepia')) {
+    uploadImgPreview.style.filter = 'sepia(' + filterValue + '% )';
+  } else if (uploadImgPreview.classList.contains('effects__preview--marvin')) {
+    uploadImgPreview.style.filter = 'invert(' + filterValue + '%)';
+  } else if (uploadImgPreview.classList.contains('effects__preview--phobos')) {
+    uploadImgPreview.style.filter = 'blur(' + proportion + 'px)';
+  } else if (uploadImgPreview.classList.contains('effects__preview--heat')) {
+    uploadImgPreview.style.filter = 'brightness(' + proportion + ')';
+  } else {
+    return;
+  }
+}
+
+
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+
+  var startCoords = {
+    x: evt.clientX,
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var deviation;
+    var percent;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+    };
+
+    deviation = pin.offsetLeft - shift.x;
+    // Расчет (%) нахождения текущего подложения пина относительно шкалы изменения насыщенности
+    percent = Math.ceil((deviation * 100) / MAX_CLIENT_X);
+
+
+    if (deviation >= MIN_CLIENT_X && deviation <= MAX_CLIENT_X) {
+      pin.style.left = deviation + 'px';
+      effectLevelPin.setAttribute('value', percent);
+      // Изменение шкалы насышенности цвета. Принимает процентное соотношение percent
+      effectLevelDepth.style.width = percent + '%';
+      filtration(percent);
+    }
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
