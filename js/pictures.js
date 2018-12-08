@@ -333,3 +333,67 @@ function validateComment(input) {
     input.setCustomValidity('');
   }
 }
+
+// Работа с перемещением пина и изменение наложенных на фотографию эффектов
+
+// Ползунок(пин)
+var pin = document.querySelector('.effect-level__pin');
+// Поле содержащее значение наложенного эффекта
+var effectLevelPin = document.querySelector('.effect-level__value');
+// Индикатор насышенности эффекта
+var effectLevelDepth = document.querySelector('.effect-level__depth');
+// Мин. координата пина относительно левого края
+var MIN_CLIENT_X = 0;
+// Макс. координата пина относительно правого края
+var MAX_CLIENT_X = 445;
+
+// 445             - 100
+// текущее значение - x
+// текущее значение * 100/705
+
+pin.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var coords = pin.getBoundingClientRect();
+
+  var startCoords = {
+    x: evt.clientX,
+  };
+
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+    var deviation;
+    var percent;
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+    };
+
+    deviation = pin.offsetLeft - shift.x;
+    // Расчет (%) нахождения текущего подложения пина относительно шкалы изменения насыщенности
+    percent = Math.ceil((deviation * 100) / MAX_CLIENT_X);
+
+
+    if (deviation >= MIN_CLIENT_X && deviation <= MAX_CLIENT_X) {
+      pin.style.left = deviation + 'px';
+      effectLevelPin.setAttribute('value', percent);
+      // Изменение шкалы насышенности цвета. Принимает процентное соотношение percent
+      effectLevelDepth.style.width = percent + '%';
+    }
+
+  };
+
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+  };
+
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+});
