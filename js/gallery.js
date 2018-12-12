@@ -12,6 +12,7 @@
   var uploadFileInput = uploadImages.querySelector('.img-upload__input');
   var closePreviewElement = uploadImages.querySelector('.img-upload__cancel');
 
+
   var onPopupEscPress = function (evt) {
     window.utils.isEscEvent(evt, closePopup);
   };
@@ -77,8 +78,8 @@
   // Пустой массив для хранения фотографий пользователей
   var photos = [];
 
-  window.generateUserPhotos(photos);
-  window.renderPhotos(photos);
+  window.picture.generateUserPhotos(photos);
+  window.picture.renderPhotos(photos);
   openPopup();
 
 

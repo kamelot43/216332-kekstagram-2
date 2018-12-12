@@ -2,6 +2,8 @@
 window.preview = (function () {
 
   var socialComments = document.querySelector('.social__comments');
+  var socialCommentCount = document.querySelector('.social__comment-count');
+  var commentsLoader = document.querySelector('.comments-loader');
   var socialComment = document.querySelector('.social__comment');
   var bigPicture = document.querySelector('.big-picture');
 
