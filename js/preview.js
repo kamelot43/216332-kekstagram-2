@@ -14,14 +14,15 @@ window.preview = (function () {
 
       var currentComment = socialComment.cloneNode(true);
 
-      currentComment.querySelector('.social__picture').setAttribute('src', 'img/avatar-' + window.utils.randomInteger(1, 6) + '.svg');
-      currentComment.querySelector('.social__text').textContent = comment;
+      currentComment.querySelector('.social__picture').setAttribute('src', comment.avatar);
+      currentComment.querySelector('.social__text').textContent = comment.message;
+      console.log(comment);
 
       return currentComment;
     },
 
     changeBigPicture: function (basePicture) {
-      bigPicture.querySelector('.big-picture__img').children[0].setAttribute('src', basePicture.user);
+      bigPicture.querySelector('.big-picture__img').children[0].setAttribute('src', basePicture.url);
       bigPicture.querySelector('.likes-count').textContent = basePicture.likes;
       bigPicture.querySelector('.comments-count').textContent = basePicture.comments.length;
       bigPicture.querySelector('.social__caption').textContent = basePicture.description;
@@ -33,6 +34,7 @@ window.preview = (function () {
       socialCommentCount.classList.add('visually-hidden');
       commentsLoader.classList.add('visually-hidden');
       var fragment = document.createDocumentFragment();
+
 
       for (var i = 0; i < baseElement.comments.length; i++) {
         var commentElement = window.preview.createCommentElement(baseElement.comments[i]);

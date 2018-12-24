@@ -18,7 +18,7 @@ window.picture = (function () {
       var similarPhotosTemplate = document.querySelector('#picture').content;
       var photoElement = similarPhotosTemplate.cloneNode(true);
 
-      photoElement.querySelector('.picture__img').setAttribute('src', photo.user);
+      photoElement.querySelector('.picture__img').setAttribute('src', photo.url);
       photoElement.querySelector('.picture__likes').textContent = photo.likes;
       photoElement.querySelector('.picture__comments').textContent = photo.comments.length;
       photoElement.querySelector('.picture').setAttribute('tabindex', '0');
@@ -58,7 +58,7 @@ window.picture = (function () {
 
     renderPhotos: function (arr) {
       var fragment = document.createDocumentFragment();
-      for (var i = 0; i < arr.length; i++) {
+      for (var i = 0; i < MAX_PHOTOS; i++) {
         fragment.appendChild(window.picture.createUserPhoto(arr[i]));
       }
       photosListElement.appendChild(fragment);

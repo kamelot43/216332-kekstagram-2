@@ -18,6 +18,13 @@
   var effectLevelPin = document.querySelector('.effect-level__value');
   // Индикатор насышенности эффекта
   var effectLevelDepth = document.querySelector('.effect-level__depth');
+  // Контейнер для загрузки фотографии других пользователей
+  // Контейнер для загрузки фотографии других пользователей
+  var uploadImages = document.querySelector('.pictures');
+  // Форма редактирования изображения
+  var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
+  var sucessPopUp = document.querySelector('#success').content;
+  var sucessBtn = sucessPopUp.querySelector('.success__button');
 
   // Очистка формы после отправки
   function resetForm(form) {
@@ -28,20 +35,46 @@
     }, 100);
   }
 
+  var closeSuccessPopUp = function () {
+    document.querySelector('.success').classList.add('hidden');
+    resetForm(uploadForm);
+  };
+
+  var openSuccessPopUp = function () {
+    document.querySelector('main').appendChild(sucessPopUp);
+    uploadImgOverlay.classList.add('hidden');
+    document.addEventListener('keydown', onSuccessPopupEscPress);
+  };
+
+  var onSuccessPopupEscPress = function (evt) {
+    window.utils.isEscEvent(evt, closeSuccessPopUp);
+  };
+
   // Валидация формы
 
   hashtagsInput.addEventListener('input', function () {
-    console.log('hello');
     window.validation.validateHashTags(hashtagsInput);
   });
 
   commentInput.addEventListener('input', function () {
-    window.validation.alidateComment(commentInput);
+    window.validation.validateComment(commentInput);
   });
 
   uploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    resetForm(uploadForm);
+    window.backend.save(new FormData(uploadForm), function () {
+
+      openSuccessPopUp();
+
+      sucessBtn.addEventListener('click', closeSuccessPopUp);
+
+      sucessBtn.addEventListener('keydown', function (evt) {
+        window.utils.isEnterEvent(evt, closeSuccessPopUp);
+      });
+
+
+    }, window.backend.error);
+
   });
 
   // Фильтрация

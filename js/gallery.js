@@ -50,6 +50,7 @@
     document.removeEventListener('keydown', onPreviewEscPress);
   };
 
+
   var change;
 
   closeBigPicture.addEventListener('click', function () {
@@ -78,9 +79,9 @@
   // Пустой массив для хранения фотографий пользователей
   var photos = [];
 
-  window.picture.generateUserPhotos(photos);
-  window.picture.renderPhotos(photos);
-  openPopup();
+  // window.picture.generateUserPhotos(photos);
+  // window.picture.renderPhotos(photos);
+  window.backend.load(window.picture.renderPhotos, window.backend.error);
 
 
   // Показ оверлея с текущей выбранной картинки при клике
@@ -92,7 +93,7 @@
     if (target.parentNode.classList.contains('picture')) {
       openPopup();
       currentElement = window.utils.findCurrentIndex(window.photoCollection, target.parentNode);
-      window.preview.pasteDataBigPicture(photos[currentElement]);
+      window.preview.pasteDataBigPicture(window.data[currentElement]);
     }
   });
 
@@ -106,7 +107,8 @@
     if (evt.keyCode === window.ENTER_KEYCODE && target.classList.contains('picture')) {
       openPopup();
       currentElement = window.utils.findCurrentIndex(window.photoCollection, target.parentNode);
-      window.preview.pasteDataBigPicture(photos[currentElement]);
+      console.log(currentElement);
+      window.preview.pasteDataBigPicture(window.data[currentElement]);
     }
   });
 
