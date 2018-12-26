@@ -23,8 +23,6 @@
   var uploadImages = document.querySelector('.pictures');
   // Форма редактирования изображения
   var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
-  var sucessPopUp = document.querySelector('#success').content;
-  var sucessBtn = sucessPopUp.querySelector('.success__button');
 
   // Очистка формы после отправки
   function resetForm(form) {
@@ -34,21 +32,6 @@
       window.filter.restartFilter();
     }, 100);
   }
-
-  var closeSuccessPopUp = function () {
-    document.querySelector('.success').classList.add('hidden');
-    resetForm(uploadForm);
-  };
-
-  var openSuccessPopUp = function () {
-    document.querySelector('main').appendChild(sucessPopUp);
-    uploadImgOverlay.classList.add('hidden');
-    document.addEventListener('keydown', onSuccessPopupEscPress);
-  };
-
-  var onSuccessPopupEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closeSuccessPopUp);
-  };
 
   // Валидация формы
 
@@ -62,18 +45,7 @@
 
   uploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(uploadForm), function () {
-
-      openSuccessPopUp();
-
-      sucessBtn.addEventListener('click', closeSuccessPopUp);
-
-      sucessBtn.addEventListener('keydown', function (evt) {
-        window.utils.isEnterEvent(evt, closeSuccessPopUp);
-      });
-
-
-    }, window.backend.error);
+    window.backend.save(new FormData(uploadForm), window.backend.successAction, window.backend.errorAction);
 
   });
 

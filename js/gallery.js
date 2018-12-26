@@ -79,9 +79,7 @@
   // Пустой массив для хранения фотографий пользователей
   var photos = [];
 
-  // window.picture.generateUserPhotos(photos);
-  // window.picture.renderPhotos(photos);
-  window.backend.load(window.picture.renderPhotos, window.backend.error);
+  window.backend.load(window.picture.renderPhotos, window.backend.errorAction);
 
 
   // Показ оверлея с текущей выбранной картинки при клике
