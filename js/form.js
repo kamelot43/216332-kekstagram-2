@@ -24,14 +24,6 @@
   // Форма редактирования изображения
   var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
 
-  // Очистка формы после отправки
-  function resetForm(form) {
-    form.submit();
-    setTimeout(function () {
-      form.reset();
-      window.filter.restartFilter();
-    }, 100);
-  }
 
   // Валидация формы
 
@@ -45,7 +37,7 @@
 
   uploadForm.addEventListener('submit', function (evt) {
     evt.preventDefault();
-    window.backend.save(new FormData(uploadForm), window.backend.successAction, window.backend.errorAction);
+    window.backend.save(new FormData(uploadForm), window.uploadData.successAction, window.uploadData.errorAction);
 
   });
 

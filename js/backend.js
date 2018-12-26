@@ -1,68 +1,6 @@
 'use strict';
 window.backend = (function () {
   var URL = 'https://js.dump.academy/kekstagram';
-  var sucessPopUp = document.querySelector('#success').content;
-  var errorPopUp = document.querySelector('#error').content;
-  var sucessBtn = sucessPopUp.querySelector('.success__button');
-  var errorButtons = errorPopUp.querySelector('.error__buttons');
-
-  var closeSuccessPopUp = function () {
-    document.querySelector('.success').style.display = 'none';
-    document.removeEventListener('keydown', onSuccessPopupEscPress);
-    resetForm(uploadForm);
-  };
-
-  var closeErrorPopUp = function () {
-    document.querySelector('.error').style.display = 'none';
-    document.removeEventListener('keydown', onErrorPopupEscPress);
-  };
-
-  var openSuccessPopUp = function () {
-    document.querySelector('main').appendChild(sucessPopUp);
-    uploadImgOverlay.classList.add('hidden');
-    document.addEventListener('keydown', onSuccessPopupEscPress);
-  };
-
-  var openErrorPopUp = function (errorMessage) {
-    document.querySelector('main').appendChild(errorPopUp);
-    document.querySelector('.error__title').textContent = errorMessage;
-    document.addEventListener('keydown', onErrorPopupEscPress);
-  };
-
-  var onSuccessPopupEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closeSuccessPopUp);
-  };
-
-  var onErrorPopupEscPress = function (evt) {
-    window.utils.isEscEvent(evt, closeErrorPopUp);
-  };
-
-  var successAction = function () {
-    openSuccessPopUp();
-
-    sucessBtn.addEventListener('click', closeSuccessPopUp);
-
-    sucessBtn.addEventListener('keydown', function (evt) {
-      window.utils.isEnterEvent(evt, closeSuccessPopUp);
-    });
-  };
-
-  var errorAction = function (error) {
-    openErrorPopUp(error);
-
-    errorButtons.addEventListener('click', function (evt) {
-      if (evt.target.classList.contains('error__button')) {
-        closeErrorPopUp();
-      }
-    });
-
-    errorButtons.addEventListener('keydown', function (evt) {
-      if (evt.target.classList.contains('error__button')) {
-        window.utils.isEnterEvent(evt, closeErrorPopUp);
-      }
-    });
-  };
-
 
   var sendRequest = function (onSuccess, onError) {
     var xhr = new XMLHttpRequest();
@@ -101,7 +39,7 @@ window.backend = (function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     });
 
-    xhr.timeout = 2000; // 10s
+    xhr.timeout = 10000; // 10s
     return xhr;
   };
 
@@ -117,32 +55,6 @@ window.backend = (function () {
 
       xhr.open('POST', URL);
       xhr.send(data);
-    },
-
-    successAction: function (errorMessage) {
-      openSuccessPopUp();
-
-      sucessBtn.addEventListener('click', closeSuccessPopUp);
-
-      sucessBtn.addEventListener('keydown', function (evt) {
-        window.utils.isEnterEvent(evt, closeSuccessPopUp);
-      });
-    },
-
-    errorAction: function (errorMessage) {
-      openErrorPopUp(errorMessage);
-
-      errorButtons.addEventListener('click', function (evt) {
-        if (evt.target.classList.contains('error__button')) {
-          closeErrorPopUp();
-        }
-      });
-
-      errorButtons.addEventListener('keydown', function (evt) {
-        if (evt.target.classList.contains('error__button')) {
-          window.utils.isEnterEvent(evt, closeErrorPopUp);
-        }
-      });
     }
   };
 })();

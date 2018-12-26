@@ -1,5 +1,6 @@
 'use strict';
 (function () {
+  var uploadForm = document.querySelector('.img-upload__form');
   // Контейнер для загрузки фотографии других пользователей
   var uploadImages = document.querySelector('.pictures');
   // Форма редактирования изображения
@@ -48,6 +49,7 @@
     uploadImgOverlay.classList.add('hidden');
     uploadFileInput.value = '';
     document.removeEventListener('keydown', onPreviewEscPress);
+    window.validation.resetForm(uploadForm);
   };
 
 
@@ -68,18 +70,17 @@
 
   closePreviewElement.addEventListener('click', function () {
     closePreview();
+    window.validation.resetForm();
   });
 
   closePreviewElement.addEventListener('keydown', function (evt) {
-    if (evt.keyCode === ENTER_KEYCODE) {
-      closePreview();
-    }
+    window.utils.isEnterEvent(evt, closePreview);
   });
 
   // Пустой массив для хранения фотографий пользователей
   var photos = [];
 
-  window.backend.load(window.picture.renderPhotos, window.backend.errorAction);
+  window.backend.load(window.picture.renderPhotos, window.uploadData.errorAction);
 
 
   // Показ оверлея с текущей выбранной картинки при клике

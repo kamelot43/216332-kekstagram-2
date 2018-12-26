@@ -30,6 +30,7 @@ window.filter = (function () {
     // Устанавливает значение пина и шкалы насышенности в значение по-умолчанию
     restartFilter: function () {
       uploadImgPreview.style.filter = '';
+      uploadImgPreview.setAttribute('class', DEFAULT_PHOTO_FILTER);
       pin.style.left = MAX_CLIENT_X + 'px';
       effectLevelDepth.style.width = MAX_DEPTH_VAL + '%';
     },

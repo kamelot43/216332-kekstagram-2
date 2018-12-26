@@ -55,7 +55,19 @@ window.validation = (function () {
       } else {
         input.setCustomValidity('');
       }
-    }
+    },
 
+    // Очистка формы после отправки
+    resetForm: function (form, flag) {
+      if (flag) {
+        form.submit();
+        console.log('hello');
+      }
+      setTimeout(function () {
+        console.log('help');
+        form.reset();
+        window.filter.restartFilter();
+      }, 100);
+    }
   };
 })();
