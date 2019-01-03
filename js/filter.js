@@ -7,13 +7,10 @@ window.filter = (function () {
   var uploadImages = document.querySelector('.pictures');
   // Предварительный просмотр изображения
   var uploadImgPreview = uploadImages.querySelector('.img-upload__preview');
-  var effectLevelPin = document.querySelector('.effect-level__value');
   // Слайдер, содержащий фото-фильтры
   var photoFiltersSlider = uploadImages.querySelector('.img-upload__effect-level');
   // Индикатор насышенности эффекта
   var effectLevelDepth = document.querySelector('.effect-level__depth');
-  // Предварительный просмотр изображения
-  var uploadImgPreview = uploadImages.querySelector('.img-upload__preview');
   // Значение масштаба фотографии
   var scaleValue = uploadImages.querySelector('.scale__control--value');
   var SCALE_BASE = 100;
@@ -37,7 +34,7 @@ window.filter = (function () {
     restartFilter: function () {
       uploadImgPreview.style.filter = '';
       uploadImgPreview.setAttribute('class', DEFAULT_PHOTO_FILTER);
-      pin.style.left = MAX_CLIENT_X + 'px';
+      pin.style.left = window.MAX_CLIENT_X + 'px';
       effectLevelDepth.style.width = MAX_DEPTH_VAL + '%';
     },
 

@@ -18,19 +18,10 @@
   var effectLevelPin = document.querySelector('.effect-level__value');
   // Индикатор насышенности эффекта
   var effectLevelDepth = document.querySelector('.effect-level__depth');
-  // Контейнер для загрузки фотографии других пользователей
-  // Контейнер для загрузки фотографии других пользователей
-  var uploadImages = document.querySelector('.pictures');
-  // Форма редактирования изображения
-  var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
 
 
-  var scaleValue = uploadImages.querySelector('.scale__control--value');
   var scaleSmaller = uploadImages.querySelector('.scale__control--smaller');
   var scaleBigger = uploadImages.querySelector('.scale__control--bigger');
-
-  var MAX_DEPTH_VAL = 100;
-  var DEFAULT_PHOTO_FILTER = 'img-upload__preview';
 
 
   scaleSmaller.addEventListener('click', window.filter.scaleMinus);

@@ -1,7 +1,6 @@
 'use strict';
 window.validation = (function () {
 
-  var DEFAULT_PHOTO_FILTER = 'img-upload__preview';
   var MAX_HASH_TAGS = 5;
   var MAX_HASH_TAG_LENGTH = 20;
   var MAX_COMMENT_LENGTH = 140;

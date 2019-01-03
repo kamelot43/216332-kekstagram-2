@@ -74,9 +74,6 @@
     window.utils.isEnterEvent(evt, closePreview);
   });
 
-  // Пустой массив для хранения фотографий пользователей
-  var photos = [];
-
   window.backend.load(window.picture.renderPhotos, window.uploadData.errorAction);
 
 
@@ -103,7 +100,6 @@
     if (evt.keyCode === window.ENTER_KEYCODE && target.classList.contains('picture')) {
       openPopup();
       currentElement = window.utils.findCurrentIndex(window.photoCollection, target.parentNode);
-      console.log(currentElement);
       window.preview.pasteDataBigPicture(window.data[currentElement]);
     }
   });

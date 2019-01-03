@@ -41,7 +41,7 @@ window.uploadData = (function () {
   };
 
   return {
-    successAction: function (errorMessage) {
+    successAction: function () {
       openSuccessPopUp();
 
       sucessBtn.addEventListener('click', closeSuccessPopUp);

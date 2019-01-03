@@ -16,7 +16,6 @@ window.preview = (function () {
 
       currentComment.querySelector('.social__picture').setAttribute('src', comment.avatar);
       currentComment.querySelector('.social__text').textContent = comment.message;
-      console.log(comment);
 
       return currentComment;
     },

@@ -9,12 +9,12 @@ window.utils = (function () {
 
   return {
     isEscEvent: function (evt, action) {
-      if (evt.keyCode === ESC_KEYCODE && hashtagsInput !== document.activeElement && commentInput !== document.activeElement) {
+      if (evt.keyCode === window.ESC_KEYCODE && hashtagsInput !== document.activeElement && commentInput !== document.activeElement) {
         action();
       }
     },
     isEnterEvent: function (evt, action) {
-      if (evt.keyCode === ENTER_KEYCODE) {
+      if (evt.keyCode === window.ENTER_KEYCODE) {
         action();
       }
     },
