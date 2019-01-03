@@ -14,6 +14,12 @@ window.filter = (function () {
   var effectLevelDepth = document.querySelector('.effect-level__depth');
   // Предварительный просмотр изображения
   var uploadImgPreview = uploadImages.querySelector('.img-upload__preview');
+  // Значение масштаба фотографии
+  var scaleValue = uploadImages.querySelector('.scale__control--value');
+  var SCALE_BASE = 100;
+  var SCALE_MIN = 25;
+  var SCALE_STEP = 25;
+
   // Мин. координата пина относительно левого края
   window.MIN_CLIENT_X = 0;
   // Макс. координата пина относительно правого края
@@ -67,8 +73,26 @@ window.filter = (function () {
       } else {
         return;
       }
-    }
+    },
 
+    // Функции увеличения/уменьшения масштаба фотографии
+    scalePlus: function () {
+      var base;
+      if (+scaleValue.value.slice(0, -1) < SCALE_BASE) {
+        base = +scaleValue.value.slice(0, -1) + SCALE_STEP;
+        scaleValue.value = base + '%';
+      }
+      return scaleValue.value;
+    },
+
+    scaleMinus: function () {
+      var base;
+      if (+scaleValue.value.slice(0, -1) > SCALE_MIN) {
+        base = +scaleValue.value.slice(0, -1) - SCALE_STEP;
+        scaleValue.value = base + '%';
+      }
+      return scaleValue.value;
+    }
 
   };
 })();

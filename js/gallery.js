@@ -52,9 +52,6 @@
     window.validation.resetForm(uploadForm);
   };
 
-
-  var change;
-
   closeBigPicture.addEventListener('click', function () {
     closePopup();
   });
@@ -70,7 +67,7 @@
 
   closePreviewElement.addEventListener('click', function () {
     closePreview();
-    window.validation.resetForm();
+    window.validation.resetForm(uploadForm);
   });
 
   closePreviewElement.addEventListener('keydown', function (evt) {

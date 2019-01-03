@@ -61,10 +61,8 @@ window.validation = (function () {
     resetForm: function (form, flag) {
       if (flag) {
         form.submit();
-        console.log('hello');
       }
       setTimeout(function () {
-        console.log('help');
         form.reset();
         window.filter.restartFilter();
       }, 100);

@@ -25,6 +25,26 @@
   var uploadImgOverlay = uploadImages.querySelector('.img-upload__overlay');
 
 
+  var scaleValue = uploadImages.querySelector('.scale__control--value');
+  var scaleSmaller = uploadImages.querySelector('.scale__control--smaller');
+  var scaleBigger = uploadImages.querySelector('.scale__control--bigger');
+
+  var MAX_DEPTH_VAL = 100;
+  var DEFAULT_PHOTO_FILTER = 'img-upload__preview';
+
+
+  scaleSmaller.addEventListener('click', window.filter.scaleMinus);
+  scaleBigger.addEventListener('click', window.filter.scalePlus);
+
+  scaleSmaller.addEventListener('keydown', function (evt) {
+    window.utils.isEnterEvent(evt, window.filter.scaleMinus);
+  });
+
+  scaleBigger.addEventListener('keydown', function (evt) {
+    window.utils.isEnterEvent(evt, window.filter.scalePlus);
+  });
+
+
   // Валидация формы
 
   hashtagsInput.addEventListener('input', function () {
